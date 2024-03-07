@@ -4,9 +4,9 @@ public class Paddle {
     public String name;
     public int xPos;
     public int yPos;
-    public int dy = 5; // speed in the y direction
+    public int dy = 6; // speed in the y direction
     public int height = 100;
-    public int width = 75;
+    public int width = 60;
     public boolean isAlive;
     public Rectangle rec;
     public boolean upIsPressed;
@@ -22,7 +22,6 @@ public class Paddle {
     }
 
     public void move(){
-
         if (upIsPressed == true) {
             yPos = yPos - dy;
         } else if (downIsPressed == true){
