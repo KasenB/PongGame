@@ -18,8 +18,20 @@ public class Main implements Runnable, KeyListener {
 
     public BufferStrategy bufferStrategy;
 
+    public boolean gamePlaying = false;
+    public boolean gameOver = false;
+    public boolean isPaused = false;
+
     public Paddle rightPaddle;
     public Paddle leftPaddle;
+
+    boolean fourIsPressed;
+    boolean fiveIsPressed;
+    boolean rightWon;
+    boolean leftWon;
+
+    boolean nineIsPressed;
+    boolean zeroIsPressed;
 
     /***
      * Step 1 for arrays: declare
@@ -87,7 +99,7 @@ public class Main implements Runnable, KeyListener {
         rightPaddle.move();
         leftPaddle.move();
         if (ball.timerRunning) {
-            System.out.println("timer: " + ball.timerRunning);
+            //System.out.println("timer: " + ball.timerRunning);
             ball.dx = 0;
             ball.dy = 0;
             // increase timer
@@ -126,14 +138,42 @@ public class Main implements Runnable, KeyListener {
         }
     }
 
+
     private void render() {
         Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
         g.clearRect(0, 0, WIDTH, HEIGHT);
 
-        g.drawImage(tablePic, 0, 0,WIDTH,HEIGHT,null);
-        g.drawImage(paddlePic, rightPaddle.xPos, rightPaddle.yPos,rightPaddle.width, rightPaddle.height, null);
-        g.drawImage(paddlePic, leftPaddle.xPos, leftPaddle.yPos,leftPaddle.width, leftPaddle.height, null);
-        g.drawImage(ballPic, ball.xPos, ball.yPos, ball.width, ball.height, null);
+        if (gamePlaying == false) {
+            g.setFont(new Font("Times Roman", Font.PLAIN, 60));
+            g.drawString("Press spacebar to start", 150, 350);
+            ball.timer = 0;
+        } // start screen
+        else if (gamePlaying == true && gameOver == false) {
+            g.drawImage(tablePic, 0, 0,WIDTH,HEIGHT,null);
+            g.drawImage(paddlePic, rightPaddle.xPos, rightPaddle.yPos,rightPaddle.width, rightPaddle.height, null);
+            g.drawImage(paddlePic, leftPaddle.xPos, leftPaddle.yPos,leftPaddle.width, leftPaddle.height, null);
+            g.drawImage(ballPic, ball.xPos, ball.yPos, ball.width, ball.height, null);
+            g.setFont(new Font("Times Roman", Font.PLAIN, 50));
+            g.setColor(Color.WHITE);
+            g.drawString("" + ball.leftPoints, 400, 50);
+            g.drawString("" + ball.rightPoints, 575,50);
+        }// gameplay
+        else {
+            if (ball.leftPoints >= 11) {
+                gamePlaying = false;
+                gameOver = true;
+                rightWon = true;
+            } // you win screen
+            else if (ball.rightPoints >= 11){
+                gamePlaying = false;
+                gameOver = true;
+                leftWon = true;
+            }
+            if (leftWon == true){
+                gamePlaying = false;
+                System.out.println("Left has won!");
+            } // you lost screen
+        } // game is over
 
         g.dispose();
         bufferStrategy.show();
@@ -180,7 +220,7 @@ public class Main implements Runnable, KeyListener {
     public void keyPressed(KeyEvent e) {
         char key = e.getKeyChar();
         int keyCode = e.getKeyCode();
-        //System.out.println("Key pressed: " + key + ", Key code: " + keyCode);
+        System.out.println("Key pressed: " + key + ", Key code: " + keyCode);
         if (keyCode == 38) {
 //            oliver.dy = -2;
             rightPaddle.upIsPressed = true;
@@ -197,6 +237,27 @@ public class Main implements Runnable, KeyListener {
 //            oliver.dy = 2;
             leftPaddle.downIsPressed = true;
         } // left paddle - down
+        if (gamePlaying == false && keyCode == 32){
+            gamePlaying = true;
+        }
+        if (keyCode == 52) {
+            fourIsPressed = true;
+        }
+        if (keyCode == 53) {
+            fiveIsPressed = true;
+        }
+        if (keyCode == 57){
+            nineIsPressed = true;
+        }
+        if (keyCode == 48) {
+            zeroIsPressed = true;
+        }
+        if (fourIsPressed == true && fiveIsPressed == true){
+            ball.leftPoints ++;
+        }
+        if (nineIsPressed == true && zeroIsPressed == true){
+            ball.rightPoints ++;
+        }
     }
 
     @Override
@@ -220,6 +281,18 @@ public class Main implements Runnable, KeyListener {
 //            oliver.dy = 2;
             leftPaddle.downIsPressed = false;
         } // left paddle - down
+        if (keyCode == 52) {
+            fourIsPressed = false;
+        }
+        if (keyCode == 53) {
+            fiveIsPressed = false;
+        }
+        if (keyCode == 57) {
+            nineIsPressed = false;
+        }
+        if (keyCode == 48) {
+            zeroIsPressed = false;
+        }
     }
 }
 
