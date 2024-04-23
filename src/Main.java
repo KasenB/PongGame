@@ -32,18 +32,20 @@ public class Main implements Runnable, KeyListener {
 
     boolean nineIsPressed;
     boolean zeroIsPressed;
+    int numBalls = 2;
 
     /***
      * Step 1 for arrays: declare
      */
-    //public Ball[] balls;
-    public Ball ball;
+    public Ball[] balls;
+//    public Ball ball;
     public boolean ballAndRightPaddle = false;
     public boolean ballAndLeftPaddle = false;
     public Image paddlePic;
     public Image tablePic;
     public Image ballPic;
     public Image boltPic;
+    public SoundFile pingPongSound;
 
     public boolean pointOn = true;
 
@@ -63,28 +65,30 @@ public class Main implements Runnable, KeyListener {
         paddlePic = Toolkit.getDefaultToolkit().getImage("paddle.png");
         leftPaddle = new Paddle("Right Paddle", 2, 305);
         ballPic = Toolkit.getDefaultToolkit().getImage("pingpongball2 copy.png");
-        ball = new Ball("Ball", 473, 320);
+        //ball = new Ball( 473, 320);
 
         /***
          * Step 2 for arrays: construct
          */
-        //balls = new Ball[2];
+        balls = new Ball[2];
+
+        pingPongSound = new SoundFile("Ping Pong Ball on Table 04.wav");
 
         /***
          * Step 3 for arrays: fill using for loop
          */
-        //for (int x = 0; x < 2; x++) {
-//            balls[x] = new Ball(473, 320);
-//            balls[x].pic = Toolkit.getDefaultToolkit().getImage("star.png");
+        for (int x = 0; x < numBalls; x++) {
+            balls[x] = new Ball(473, 320);
+            balls[x].pic = Toolkit.getDefaultToolkit().getImage("star.png");
 
 
-        tablePic = Toolkit.getDefaultToolkit().getImage("pingpongtable2.jpeg");
+            tablePic = Toolkit.getDefaultToolkit().getImage("pingpongtable2.jpeg");
 
-    } // end BasicGameApp constructor
+        } // end BasicGameApp constructor
+    }
 
 
-
-    public void run() {
+    public void run () {
         //for the moment we will loop things forever.
         while (true) {
             moveThings();  //move all the game objects
@@ -94,86 +98,127 @@ public class Main implements Runnable, KeyListener {
         }
     }
 
-    public void moveThings() {
+    public void moveThings () {
         //call the move() code for each object
         rightPaddle.move();
         leftPaddle.move();
-        if (ball.timerRunning) {
-            //System.out.println("timer: " + ball.timerRunning);
-            ball.dx = 0;
-            ball.dy = 0;
-            // increase timer
-            ball.timer++;
-        } else {
-            ball.move();
-
+        for (int x = 0; x < numBalls; x ++) {
+            balls[x].move();
         }
-        if (ball.timer > 75) {
-            ball.timerRunning = false;
-            ball.timer = 0;
-            ball.dx = (int) (Math.random() * 5 + 6);
-            ball.dy = (int) (Math.random() * 3 + 2);
+        for (int x = 0; x < numBalls; x ++) {
+            if (balls[x].timerRunning) {
+                //System.out.println("timer: " + ball.timerRunning);
+                balls[x].dx = 0;
+                balls[x].dy = 0;
+                // increase timer
+                balls[x].timer++;
+            } else {
+                balls[x].move();
 
+            }
+
+            if (balls[x].timer > 75) {
+                balls[x].timerRunning = false;
+                balls[x].timer = 0;
+                if (numBalls == 1) {
+                    balls[x].dx = (int) (Math.random() * 3 + 2);
+                    balls[x].dy = (int) (Math.random() * 3 + 2);
+                } else if (numBalls == 2) {
+                    balls[x].dx = (int) (Math.random() * 2 + 2);
+                    balls[x].dy = (int) (Math.random() * 2 + 2);
+                }
+
+            }
         }
 
     }
 
-    public void collisions(){
-        if (ball.rec.intersects(rightPaddle.rec) && ballAndRightPaddle == false) {
-            ballAndRightPaddle = true;
-            ball.dx = -ball.dx - 2 ;
-            ball.dy = ball.dy + 1;
-        }
-        if ( !ball.rec.intersects(rightPaddle.rec)) {
-            ballAndRightPaddle = false;
-        }
+    public void collisions () {
+        for (int x = 0; x < numBalls; x ++) {
 
-        if (ball.rec.intersects(leftPaddle.rec) && ballAndLeftPaddle == false) {
-            ballAndLeftPaddle = true;
-            ball.dx = -ball.dx + 2;
-            ball.dy = ball.dy + 1;
-        }
-        if ( !ball.rec.intersects(leftPaddle.rec)) {
-            ballAndLeftPaddle = false;
+            if (balls[x].rec.intersects(rightPaddle.rec) && ballAndRightPaddle == false) {
+                ballAndRightPaddle = true;
+                if (numBalls == 1) {
+                    balls[x].dx = -balls[x].dx - 2;
+                    balls[x].dy = balls[x].dy + 1;
+                } else if (numBalls == 2){
+                    balls[x].dx = -balls[x].dx - 1;
+                    balls[x].dy = balls[x].dy + 1;
+                }
+                pingPongSound.play();
+            }
+            if (!balls[x].rec.intersects(rightPaddle.rec)) {
+                ballAndRightPaddle = false;
+            }
+
+            if (balls[x].rec.intersects(leftPaddle.rec) && ballAndLeftPaddle == false) {
+                ballAndLeftPaddle = true;
+                if (numBalls == 1) {
+                    balls[x].dx = -balls[x].dx + 2;
+                    balls[x].dy = balls[x].dy + 1;
+                } else if (numBalls == 2){
+                    balls[x].dx = -balls[x].dx + 1;
+                    balls[x].dy = balls[x].dy + 1;
+                }
+                pingPongSound.play();
+            }
+            if (!balls[x].rec.intersects(leftPaddle.rec)) {
+                ballAndLeftPaddle = false;
+            }
         }
     }
 
 
-    private void render() {
+    private void render () {
         Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
         g.clearRect(0, 0, WIDTH, HEIGHT);
 
         if (gamePlaying == false) {
             g.setFont(new Font("Times Roman", Font.PLAIN, 60));
             g.drawString("Press spacebar to start", 150, 350);
-            ball.timer = 0;
+            g.setFont(new Font("Times Roman", Font.PLAIN, 40));
+            g.drawString("Press 1 for 1 ball, press 2 for 2 balls", 120, 400);
+            for (int x = 0; x < numBalls; x ++) {
+
+                balls[x].timer = 0;
+            }
         } // start screen
         else if (gamePlaying == true && gameOver == false) {
-            g.drawImage(tablePic, 0, 0,WIDTH,HEIGHT,null);
-            g.drawImage(paddlePic, rightPaddle.xPos, rightPaddle.yPos,rightPaddle.width, rightPaddle.height, null);
-            g.drawImage(paddlePic, leftPaddle.xPos, leftPaddle.yPos,leftPaddle.width, leftPaddle.height, null);
-            g.drawImage(ballPic, ball.xPos, ball.yPos, ball.width, ball.height, null);
+            g.drawImage(tablePic, 0, 0, WIDTH, HEIGHT, null);
+            g.drawImage(paddlePic, rightPaddle.xPos, rightPaddle.yPos, rightPaddle.width, rightPaddle.height, null);
+            g.drawImage(paddlePic, leftPaddle.xPos, leftPaddle.yPos, leftPaddle.width, leftPaddle.height, null);
             g.setFont(new Font("Times Roman", Font.PLAIN, 50));
             g.setColor(Color.WHITE);
-            g.drawString("" + ball.leftPoints, 400, 50);
-            g.drawString("" + ball.rightPoints, 575,50);
+
+            for (int x = 0; x < numBalls; x ++) {
+                g.drawImage(ballPic, balls[x].xPos, balls[x].yPos, balls[x].width, balls[x].height, null);
+                g.drawString("" + balls[x].leftPoints, 400, 50);
+                g.drawString("" + balls[x].rightPoints, 575, 50);
+            }
         }// gameplay
         else {
-            if (ball.leftPoints >= 11) {
-                gamePlaying = false;
-                gameOver = true;
-                rightWon = true;
-            } // you win screen
-            else if (ball.rightPoints >= 11){
-                gamePlaying = false;
-                gameOver = true;
-                leftWon = true;
+            for (int x = 0; x < numBalls; x ++) {
+                if (balls[x].leftPoints >= 11) {
+                    gamePlaying = false;
+                    gameOver = true;
+                    rightWon = true;
+                } // you win screen
+                else if (balls[x].rightPoints >= 11) {
+                    gamePlaying = false;
+                    gameOver = true;
+                    leftWon = true;
+                }
+                if (leftWon == true) {
+                    gamePlaying = false;
+                    System.out.println("Left has won!");
+                } // you lost screen
             }
-            if (leftWon == true){
-                gamePlaying = false;
-                System.out.println("Left has won!");
-            } // you lost screen
         } // game is over
+        for (int x = 0; x < balls.length; x++) {
+            if (balls[x].isAlive == true) {
+                g.drawImage(balls[x].pic, balls[x].xPos, balls[x].yPos, balls[x].width, balls[x].height, null);
+            }
+        }
 
         g.dispose();
         bufferStrategy.show();
@@ -252,11 +297,11 @@ public class Main implements Runnable, KeyListener {
         if (keyCode == 48) {
             zeroIsPressed = true;
         }
-        if (fourIsPressed == true && fiveIsPressed == true){
-            ball.leftPoints ++;
+        if (keyCode == 49){
+            numBalls = 1;
         }
-        if (nineIsPressed == true && zeroIsPressed == true){
-            ball.rightPoints ++;
+        if(keyCode == 50){
+            numBalls = 2;
         }
     }
 

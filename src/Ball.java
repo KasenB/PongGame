@@ -17,7 +17,7 @@ public class Ball {
     public int timer;
     public boolean timerRunning = true;
 
-    public Ball(String ball, int paramXPos, int paramYPos){
+    public Ball(int paramXPos, int paramYPos){
         xPos = paramXPos;
         yPos = paramYPos;
         rec = new Rectangle(xPos, yPos, width, height);
