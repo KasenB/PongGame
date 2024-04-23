@@ -174,10 +174,10 @@ public class Main implements Runnable, KeyListener {
         g.clearRect(0, 0, WIDTH, HEIGHT);
 
         if (gamePlaying == false) {
-            g.setFont(new Font("Times Roman", Font.PLAIN, 60));
-            g.drawString("Press spacebar to start", 150, 350);
             g.setFont(new Font("Times Roman", Font.PLAIN, 40));
-            g.drawString("Press 1 for 1 ball, press 2 for 2 balls", 120, 400);
+            g.drawString("Press 1 for 1 ball, press 2 for 2 balls", 150, 325);
+            g.setFont(new Font("Times Roman", Font.PLAIN, 40));
+            g.drawString("Then press spacebar to start", 200, 375);
             for (int x = 0; x < numBalls; x ++) {
 
                 balls[x].timer = 0;
@@ -189,12 +189,16 @@ public class Main implements Runnable, KeyListener {
             g.drawImage(paddlePic, leftPaddle.xPos, leftPaddle.yPos, leftPaddle.width, leftPaddle.height, null);
             g.setFont(new Font("Times Roman", Font.PLAIN, 50));
             g.setColor(Color.WHITE);
+            int leftPoint = 0;
+            int rightPoint = 0;
 
             for (int x = 0; x < numBalls; x ++) {
                 g.drawImage(ballPic, balls[x].xPos, balls[x].yPos, balls[x].width, balls[x].height, null);
-                g.drawString("" + balls[x].leftPoints, 400, 50);
-                g.drawString("" + balls[x].rightPoints, 575, 50);
+               rightPoint += balls[x].rightPoints;
+               leftPoint += balls[x].leftPoints;
             }
+            g.drawString("" + leftPoint, 400, 50);
+            g.drawString("" + rightPoint, 575, 50);
         }// gameplay
         else {
             for (int x = 0; x < numBalls; x ++) {
