@@ -29,8 +29,6 @@ public class Paddle {
         }
 
 
-        // Because we now have control over the character, we don't need wrap.
-        // || = or
         if (yPos < 0){
             yPos=0;
         }

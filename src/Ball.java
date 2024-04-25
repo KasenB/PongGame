@@ -32,6 +32,7 @@ public class Ball {
         } // top & bottom
 
         if (xPos + width > 1000 )  {
+            // if ball is not hit by right, left gets a point
             leftPoints ++;
             System.out.println("Left has " + leftPoints + " points, Right has " + rightPoints + " points.");
             yPos = 320;
@@ -43,6 +44,7 @@ public class Ball {
         } // right
 
         if (xPos < 0) {
+            // if ball is not hit by left, give a point to right
             rightPoints ++;
             System.out.println("Left has " + leftPoints + " points, Right has " + rightPoints + " points.");
             yPos = 320;

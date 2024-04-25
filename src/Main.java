@@ -60,7 +60,7 @@ public class Main implements Runnable, KeyListener {
 
         //variable and objects
         //create (construct) the objects needed for the game
-        // **** STEP 2: CONTSTRUCT ASTRONAUT AND ITS IMAGE
+        // **** STEP 2: CONTSTRUCT AND IMAGE
         rightPaddle = new Paddle("Right Paddle", 936, 305);
         paddlePic = Toolkit.getDefaultToolkit().getImage("paddle.png");
         leftPaddle = new Paddle("Right Paddle", 2, 305);
@@ -136,6 +136,7 @@ public class Main implements Runnable, KeyListener {
     public void collisions () {
         for (int x = 0; x < numBalls; x ++) {
 
+            // ball paddle collisions
             if (balls[x].rec.intersects(rightPaddle.rec) && ballAndRightPaddle == false) {
                 ballAndRightPaddle = true;
                 if (numBalls == 1) {
@@ -202,20 +203,20 @@ public class Main implements Runnable, KeyListener {
         }// gameplay
         else {
             for (int x = 0; x < numBalls; x ++) {
-                if (balls[x].leftPoints >= 11) {
-                    gamePlaying = false;
-                    gameOver = true;
-                    rightWon = true;
-                } // you win screen
-                else if (balls[x].rightPoints >= 11) {
-                    gamePlaying = false;
-                    gameOver = true;
-                    leftWon = true;
-                }
-                if (leftWon == true) {
-                    gamePlaying = false;
-                    System.out.println("Left has won!");
-                } // you lost screen
+//                if (balls[x].leftPoints >= 11) {
+//                    gamePlaying = false;
+//                    gameOver = true;
+//                    rightWon = true;
+//                } // you win screen
+//                else if (balls[x].rightPoints >= 11) {
+//                    gamePlaying = false;
+//                    gameOver = true;
+//                    leftWon = true;
+//                }
+//                if (leftWon == true) {
+//                    gamePlaying = false;
+//                    System.out.println("Left has won!");
+//                } // you lost screen
             }
         } // game is over
         for (int x = 0; x < balls.length; x++) {
@@ -269,7 +270,7 @@ public class Main implements Runnable, KeyListener {
     public void keyPressed(KeyEvent e) {
         char key = e.getKeyChar();
         int keyCode = e.getKeyCode();
-        System.out.println("Key pressed: " + key + ", Key code: " + keyCode);
+//        System.out.println("Key pressed: " + key + ", Key code: " + keyCode);
         if (keyCode == 38) {
 //            oliver.dy = -2;
             rightPaddle.upIsPressed = true;
@@ -289,18 +290,7 @@ public class Main implements Runnable, KeyListener {
         if (gamePlaying == false && keyCode == 32){
             gamePlaying = true;
         }
-        if (keyCode == 52) {
-            fourIsPressed = true;
-        }
-        if (keyCode == 53) {
-            fiveIsPressed = true;
-        }
-        if (keyCode == 57){
-            nineIsPressed = true;
-        }
-        if (keyCode == 48) {
-            zeroIsPressed = true;
-        }
+
         if (keyCode == 49){
             numBalls = 1;
         }
@@ -330,18 +320,6 @@ public class Main implements Runnable, KeyListener {
 //            oliver.dy = 2;
             leftPaddle.downIsPressed = false;
         } // left paddle - down
-        if (keyCode == 52) {
-            fourIsPressed = false;
-        }
-        if (keyCode == 53) {
-            fiveIsPressed = false;
-        }
-        if (keyCode == 57) {
-            nineIsPressed = false;
-        }
-        if (keyCode == 48) {
-            zeroIsPressed = false;
-        }
     }
 }
 
